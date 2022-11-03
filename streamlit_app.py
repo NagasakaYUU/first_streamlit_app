@@ -1,18 +1,22 @@
 import streamlit
 import pandas
 import requests
-
-
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
-# write your own comment -what does the next line do? 
-fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-# write your own comment - what does this do?
-streamlit.dataframe(fruityvice_normalized)
+import snowflake.connector
+from urllib.error import URLError
 
 streamlit.header("Fruityvice Fruit Advice!")
-fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
+try:
+  fruit_choice = streamlit.text_input('What fruit would you like information about?')
+  if not fruit_choice:
+    streamlit.error("Please select a fruit to get information.")
+  else:
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
+    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+    streamlit.dataframe(fruityvice_normalized)
+except URLError as e:
+  streamlit.error()
 
-streamlit.write('The user entered ', fruit_choice)
+
 streamlit.title('My Moms New Healthy Dinner')
 streamlit.header('Breakfast Favorites')
 streamlit.text('🥣 Omega 3 & Blueberry Oatmeal')
@@ -22,8 +26,7 @@ streamlit.text("🥑🍞Avocado toast")
 streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 streamlit.dataframe(my_fruit_list)
-
-import snowflake.connector
+streamlit.stop()
 
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()

@@ -4,6 +4,17 @@ import requests
 import snowflake.connector
 from urllib.error import URLError
 
+streamlit.title('My Moms New Healthy Dinner')
+streamlit.header('Breakfast Favorites')
+streamlit.text('🥣 Omega 3 & Blueberry Oatmeal')
+streamlit.text('🥗Kale, Spinach & Rocket Smoothie')
+streamlit.text('🐔Hard-Boiled Free-Range Egg')
+streamlit.text("🥑🍞Avocado toast")
+streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
+my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
+streamlit.dataframe(my_fruit_list)
+streamlit.stop()
+
 streamlit.header("Fruityvice Fruit Advice!")
 try:
   fruit_choice = streamlit.text_input('What fruit would you like information about?')
@@ -17,16 +28,7 @@ except URLError as e:
   streamlit.error()
 
 
-streamlit.title('My Moms New Healthy Dinner')
-streamlit.header('Breakfast Favorites')
-streamlit.text('🥣 Omega 3 & Blueberry Oatmeal')
-streamlit.text('🥗Kale, Spinach & Rocket Smoothie')
-streamlit.text('🐔Hard-Boiled Free-Range Egg')
-streamlit.text("🥑🍞Avocado toast")
-streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
-my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
-streamlit.dataframe(my_fruit_list)
-streamlit.stop()
+
 
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
